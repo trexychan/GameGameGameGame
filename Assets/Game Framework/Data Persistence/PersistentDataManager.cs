@@ -2,12 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 public class PersistentDataManager : MonoBehaviour
 {
-    public List<MinigameScriptableObject> scriptableObjectMinigames;
-
     public PlayerSettings debug_playerSettings;
     public MinigameList debug_minigameMasterList;
     public Run debug_run;
@@ -18,9 +17,6 @@ public class PersistentDataManager : MonoBehaviour
     public static PlayerSettings playerSettings;
     public static MinigameList minigameMasterList;
     public static Run run;
-
-    
-    
     
     // MonoBehaviour Methods
 
@@ -50,13 +46,13 @@ public class PersistentDataManager : MonoBehaviour
     //Public Methods
 
     public void SavePlayerSettings() {
-        if (playerSettings != null) {
+        if (playerSettings != null && SaveSettings.settingsSavingEnabled) {
             FileSaveUtil.SaveData<PlayerSettings>("playerSettings", playerSettings);
         }
     }
 
     public void SaveMinigameMasterList() {
-        if (minigameMasterList != null) {
+        if (minigameMasterList != null && SaveSettings.minigameSavingEnabled) {
             FileSaveUtil.SaveData<MinigameList>("minigameMasterList", minigameMasterList);
         }
     }
@@ -71,20 +67,21 @@ public class PersistentDataManager : MonoBehaviour
 
     private void LoadPlayerSettings() {
         playerSettings = FileSaveUtil.LoadData<PlayerSettings>("playerSettings");
-        if (playerSettings == null) {
+        if (playerSettings == null || SaveSettings.settingsSavingEnabled == false) {
             playerSettings = new PlayerSettings();
         }
     }
 
     private void LoadMinigameMasterList() {
         minigameMasterList = FileSaveUtil.LoadData<MinigameList>("minigameMasterList");
-        if (minigameMasterList == null) {
-            minigameMasterList = new MinigameList(scriptableObjectMinigames);
+        if (minigameMasterList == null || SaveSettings.minigameSavingEnabled == false) {
+            minigameMasterList = new MinigameList(true);
         }
     }
 
     private Minigame IsInMinigame() {
         return minigameMasterList.minigames.Find(item => item.SceneName == SceneManager.GetActiveScene().name);
     }
+
 
 }
