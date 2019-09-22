@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class RunOverExiting : ExitingBehaviour
 {
-    [SerializeField] private float _exitTime = 1f;
-    [SerializeField] private RectTransform _restartRect;
-    [SerializeField] private TransitionData _restartTransitionData;
-    [SerializeField] private RectTransform _mainMenuRect;
-    [SerializeField] private TransitionData _mainMenuTransitionData;
+    [SerializeField] private RectTransform _restartRect = null;
+    [SerializeField] private TransitionData _restartTransitionData = null;
+    [SerializeField] private RectTransform _mainMenuRect = null;
+    [SerializeField] private TransitionData _mainMenuTransitionData = null;
     public static bool restarting = false;
 
     protected override void OnStateEnter() {
@@ -33,7 +32,7 @@ public class RunOverExiting : ExitingBehaviour
             (complete) => {
                 if (!complete) return;
                 PersistentDataManager.run = null;
-                SceneManager.LoadScene("MainMenuScene");
+                SceneManager.LoadScene("Main Menu Scene");
             }
         ));
         yield return null;

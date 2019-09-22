@@ -11,8 +11,18 @@ public class MinigameList
     private static readonly System.Random rnd = new System.Random();
     public List<Minigame> minigames;
 
+    // Creates an empty list
     public MinigameList() {
         minigames = new List<Minigame>();
+    }
+
+    public MinigameList(bool populate) : this() {
+        if (populate) {
+            MinigameScriptableObject[] soArray = Resources.LoadAll<MinigameScriptableObject>("Minigames");
+            foreach(MinigameScriptableObject m in soArray) {
+                minigames.Add(m.ToObject());
+            }
+        }
     }
 
     public MinigameList(List<MinigameScriptableObject> soList) : this() {
@@ -33,6 +43,12 @@ public class MinigameList
         foreach(Minigame other in otherList.minigames) {
             minigames.First( item => item.Name == other.Name).UpdateDetails(other);
         }
+    }
+
+    public MinigameList RandomReorder() {
+        List<Minigame> newList = minigames;
+        newList.Shuffle();
+        return new MinigameList(newList);
     }
 
     public MinigameList RandomReorder(Minigame first) {
